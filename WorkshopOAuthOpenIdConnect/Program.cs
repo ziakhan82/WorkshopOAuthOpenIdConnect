@@ -13,7 +13,7 @@ builder.Services.AddAuthentication(options =>
 .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
 {
     options.Authority = "https://localhost:8080/realms/master/protocol/openid-connect/auth"; // Set your Keycloak realm URL
-    options.ClientId = "my-client"; // Set your client ID
+    options.ClientId = "zia-client"; // Set your client ID
     options.ClientSecret = "your-client-secret"; // Set your client secret
     options.ResponseType = "code";
     options.Scope.Add("openid");
@@ -27,6 +27,11 @@ builder.Services.AddAuthentication(options =>
 });
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSession(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
@@ -44,6 +49,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
